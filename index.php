@@ -1,7 +1,5 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-
 
 require 'vendor/autoload.php';
 require 'Models/User.php';
