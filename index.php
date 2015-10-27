@@ -26,6 +26,10 @@ $app->view(new \JsonApiView());
 $app->add(new \JsonApiMiddleware());
 $app->add(new \Slim\Middleware\ContentTypes());
 
+$app->options('/(:name+)', function() use ($app) {
+    $app->render(200,array('msg' => 'API PROG4'));
+});
+
 $app->get('/', function () use ($app) {
 $app->render(200,array('msg' =>'API INDEX'));
 });
