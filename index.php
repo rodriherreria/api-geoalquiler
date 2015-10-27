@@ -11,10 +11,10 @@ $app = new \Slim\Slim();
 $app->config('databases', [
     'default' => [
         'driver'    => 'mysql',
-        'host'      => 'localhost',
-        'database'  => 'geo',
-        'username'  => 'Geo',
-        'password'  => 'geoalquiler',
+        'host'      => 'us-cdbr-iron-east-03.cleardb.net',
+        'database'  => 'heroku_cdaa68b6cbc8edb',
+        'username'  => 'b5d870bc08264e',
+        'password'  => '121369b6',
         'charset'   => 'utf8',
         'collation' => 'utf8_general_ci',
         'prefix'    => ''
