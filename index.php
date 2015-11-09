@@ -214,11 +214,6 @@ $app->post('/login', function () use ($app) {
         $app->flash('errors', $errors);
         $app->render(200,array('error' => FALSE, 'msg'   => 'Logeado exitosamente',
         ));
-    }else if (count($errors) < 0){
-        $app->flash('errors', $errors);
-        $app->render(300,array('error' => TRUE, 'msg'   => 'Fallo en Login',
-        ));
-
     }
 	
 });
