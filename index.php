@@ -190,7 +190,7 @@ $app->post('/login', function() use ($app) {
     $app->redirect('/');
 
 })->name('login');
-*/
+
 
 
 //Login2
@@ -205,6 +205,7 @@ $app->post('/login', function () use ($app) {
     $errors = array();
     if ($email != "puntsdasdasdo@gmail.com") {
         $errors['usuario'] = "Email is not found.";
+
     } else if ($password != "123") {
         $app->flash('email', $email);
         $errors['password'] = "Password does not match.";
@@ -217,6 +218,26 @@ $app->post('/login', function () use ($app) {
     }
 	
 });
+*/
+
+
+//Login2
+$app->post('/login', function () use ($app) {
+
+	$input = $app->request->getBody();
+	
+	$email = $input['usuario'];
+
+	$user = User::find($email);
+	if(empty($user)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'user not found',
+        ));
+	}
+	$app->render(200,array('data' => $user->toArray()));
+});
+
 
 //Editar
 
