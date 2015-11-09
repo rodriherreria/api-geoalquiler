@@ -42,35 +42,39 @@ $app->get('/usuarios', function () use ($app) {
 
 //login
 
-$app->get('/login',function() use($app) {
-    $req = $app->request();
-    $requiredfields = array(
-        'email',
-        'password'
-    );
+$app->post('/login', function() use ($app) {
+    $req = $app->request;
 
-    if(!RequiredFields($req->get(), $requiredfields)){
-        return false;
+    $user= $req->params('user');
+    $pass = $req->params('pass');
+
+    try {
+        $query = $app->db->prepare("SELECT user, password FROM users
+                              WHERE user = :user AND password = :pass
+                              LIMIT 1");
+        $query->execute(
+            array(
+                ':user' => $user,
+                ':pass' => md5($pass)
+            )
+        );
+
+        $result = $query->fetch();
     }
-    $email = $req->get("email");
-    $password = $req->get("password");
-    global $conn;
-    $sql='SELECT * from users where EmailAddress="'.$email.'" and Password="'.$password.'"';
-    $rs=$conn->query($sql);
-    $arr = $rs->fetch_array(MYSQLI_ASSOC);
-    if($arr == null){
-        echo json_encode(array(
-            "error" => 1,
-            "message" => "Email o contraña no es correcta",
-        ));
-        return;
+
+    catch (PDOException $e) {
+        $app->flash('error', 'db error');
     }
-    echo json_encode(array(
-        "error" => 0,
-        "message" => "Ya puede ingresar",
-        "users" => $arr
-    ));
-});
+
+
+    if ( empty($result) ) {
+        $app->flash('error', 'wrong user or pass');
+        $app->redirect('/login');
+    }
+
+    $app->redirect('/');
+
+})->name('login');
 
 //Insertar
 
