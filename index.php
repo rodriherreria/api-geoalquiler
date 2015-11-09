@@ -165,7 +165,7 @@ $app->post('/login', function() use ($app) {
 
     try {
         $query = $app->db->prepare("SELECT user, password FROM users
-                              WHERE user = :user AND password = :pass
+                              WHERE user = $user AND password = $pass
                               LIMIT 1");
         $query->execute(
             array(
