@@ -75,9 +75,9 @@ $app->post('/login', function() use ($app) {
     $app->redirect('/');
 
 })->name('login');
-*/
 
-/*login2
+
+//Login2
 $app->post('/login', function () use ($app) {
 
 	$input = $app->request->getBody();
@@ -100,9 +100,9 @@ $app->post('/login', function () use ($app) {
         ));
     }
 	
-});*/
+});
 
-//login3
+/* Login 3
 $app->post('/login', function () use ($app) {
 
 	$input = $app->request->getBody();
@@ -153,6 +153,44 @@ $app->post('/usuarios', function () use ($app) {
     $user->save();
     $app->render(200,array('data' => $user->toArray()));
 });
+*/
+
+//login4
+
+$app->post('/login', function() use ($app) {
+    $req = $app->request;
+
+    $user= $req->params('user');
+    $pass = $req->params('pass');
+
+    try {
+        $query = $app->db->prepare("SELECT user, password FROM users
+                              WHERE user = :user AND password = :pass
+                              LIMIT 1");
+        $query->execute(
+            array(
+                ':user' => $user,
+                ':pass' => $pass
+            )
+        );
+
+        $result = $query->fetch();
+    }
+
+    catch (PDOException $e) {
+        $app->flash('error', 'db error');
+    }
+
+
+    if ( empty($result) ) {
+        $app->flash('error', 'wrong user or pass');
+        $app->redirect('/login');
+    }
+
+    $app->redirect('/');
+
+})->name('login');
+
 
 //Editar
 
