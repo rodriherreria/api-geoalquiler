@@ -40,7 +40,7 @@ $app->get('/usuarios', function () use ($app) {
 	$app->render(200,array('data' => $users));
 });
 
-//login
+/*login
 
 $app->post('/login', function() use ($app) {
     $req = $app->request;
@@ -75,7 +75,32 @@ $app->post('/login', function() use ($app) {
     $app->redirect('/');
 
 })->name('login');
+*/
 
+//login2
+$app->post('/login', function () use ($app) {
+
+	$input = $app->request->getBody();
+	$errors = array();
+	
+	$email = $input['usuario'];
+    $password = $input['password'];
+	
+    $errors = array();
+    if ($email != "puntsdasdasdo@gmail.com") {
+        $errors['email'] = "Email is not found.";
+    } else if ($password != "123") {
+        $app->flash('email', $email);
+        $errors['password'] = "Password does not match.";
+    }
+	
+	  if (count($errors) > 0) {
+        $app->flash('errors', $errors);
+        $app->render(200,array('error' => FALSE, 'msg'   => 'Logeado exitosamente',
+        ));
+    }
+	
+});
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
