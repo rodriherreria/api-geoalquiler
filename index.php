@@ -40,6 +40,38 @@ $app->get('/usuarios', function () use ($app) {
 	$app->render(200,array('data' => $users));
 });
 
+//login
+
+$app->get('/login',function() use($app) {
+    $req = $app->request();
+    $requiredfields = array(
+        'email',
+        'password'
+    );
+
+    if(!RequiredFields($req->get(), $requiredfields)){
+        return false;
+    }
+    $email = $req->get("email");
+    $password = $req->get("password");
+    global $conn;
+    $sql='SELECT * from users where EmailAddress="'.$email.'" and Password="'.$password.'"';
+    $rs=$conn->query($sql);
+    $arr = $rs->fetch_array(MYSQLI_ASSOC);
+    if($arr == null){
+        echo json_encode(array(
+            "error" => 1,
+            "message" => "Email o contraña no es correcta",
+        ));
+        return;
+    }
+    echo json_encode(array(
+        "error" => 0,
+        "message" => "Ya puede ingresar",
+        "users" => $arr
+    ));
+});
+
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
