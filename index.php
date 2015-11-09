@@ -158,10 +158,10 @@ $app->post('/usuarios', function () use ($app) {
 //login4
 
 $app->post('/login', function() use ($app) {
-    $req = $app->request;
-
-    $user= $req->params('user');
-    $pass = $req->params('pass');
+   $input = $app->request->getBody();
+	
+	$user = $input['usuario'];
+    $pass = $input['password'];
 
     try {
         $query = $app->db->prepare("SELECT user, password FROM users
