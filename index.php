@@ -77,7 +77,7 @@ $app->post('/login', function() use ($app) {
 })->name('login');
 */
 
-//login2
+/*login2
 $app->post('/login', function () use ($app) {
 
 	$input = $app->request->getBody();
@@ -88,7 +88,7 @@ $app->post('/login', function () use ($app) {
 	
     $errors = array();
     if ($email != "puntsdasdasdo@gmail.com") {
-        $errors['email'] = "Email is not found.";
+        $errors['usuario'] = "Email is not found.";
     } else if ($password != "123") {
         $app->flash('email', $email);
         $errors['password'] = "Password does not match.";
@@ -100,7 +100,27 @@ $app->post('/login', function () use ($app) {
         ));
     }
 	
-});
+});*/
+
+//login3
+$app->post('/login', function () use ($app) {
+
+	$input = $app->request->getBody();
+	
+	$user = $input['usuario'];
+	$pass = $input['password'];
+	
+	if ($user == "Fran Meriles" && $pass == "1234") { 
+			
+			$app->render(200,array('data' => $user->toArray()));	
+	}
+		
+	$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'user not found',
+        ));
+	
+	});
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
