@@ -192,24 +192,24 @@ $app->post('/anuncios', function () use ($app) {
 
   $input = $app->request->getBody();
 	$titulo = $input['titulo'];
-	if(empty($name)){
+	if(empty($titulo)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'name is required',
+            'msg'   => 'titulo is required',
         ));
 	}
 	$descripcion = $input['descripcion'];
-	if(empty($password)){
+	if(empty($descripcion)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'password is required',
+            'msg'   => 'descripcion is required',
         ));
 	}
 	$precio = $input['precio'];
-	if(empty($email)){
+	if(empty($precio)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'email is required',
+            'msg'   => 'precio is required',
         ));
 	}
     $user = new Anuncio();
