@@ -210,13 +210,14 @@ $app->post('/login', function () use ($app) {
         $errors['password'] = "Password does not match.";
     }
 	
-	  if (count($errors) = 0) {
+	  if (count($errors) > 0) {
         $app->flash('errors', $errors);
         $app->render(200,array('error' => FALSE, 'msg'   => 'Logeado exitosamente',
         ));
-    }else{
-
-    	 $app->render(300,array('error' => TRUE, 'msg'   => 'Error en el Login',
+    }else if (count($errors) < 0){
+        $app->flash('errors', $errors);
+        $app->render(300,array('error' => TRUE, 'msg'   => 'Fallo en Login',
+        ));
 
     }
 	
