@@ -155,7 +155,7 @@ $app->post('/usuarios', function () use ($app) {
 });
 */
 
-//login4
+/*
 
 $app->post('/login', function() use ($app) {
    $input = $app->request->getBody();
@@ -165,7 +165,7 @@ $app->post('/login', function() use ($app) {
 
     try {
         $query = $app->db->prepare("SELECT user, password FROM users
-                              WHERE user = $user AND password = $pass
+                              WHERE user = :user AND password = :pass
                               LIMIT 1");
         $query->execute(
             array(
@@ -190,7 +190,37 @@ $app->post('/login', function() use ($app) {
     $app->redirect('/');
 
 })->name('login');
+*/
 
+
+//Login2
+$app->post('/login', function () use ($app) {
+
+	$input = $app->request->getBody();
+	$errors = array();
+	
+	$email = $input['usuario'];
+    $password = $input['password'];
+	
+    $errors = array();
+    if ($email != "puntsdasdasdo@gmail.com") {
+        $errors['usuario'] = "Email is not found.";
+    } else if ($password != "123") {
+        $app->flash('email', $email);
+        $errors['password'] = "Password does not match.";
+    }
+	
+	  if (count($errors) = 0) {
+        $app->flash('errors', $errors);
+        $app->render(200,array('error' => FALSE, 'msg'   => 'Logeado exitosamente',
+        ));
+    }else{
+
+    	 $app->render(300,array('error' => TRUE, 'msg'   => 'Error en el Login',
+
+    }
+	
+});
 
 //Editar
 
