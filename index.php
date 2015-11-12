@@ -40,8 +40,7 @@ $app->get('/usuarios', function () use ($app) {
 	$app->render(200,array('data' => $users));
 });
 
-/*login
-
+/*
 $app->post('/login', function() use ($app) {
     $req = $app->request;
 
@@ -75,7 +74,6 @@ $app->post('/login', function() use ($app) {
     $app->redirect('/');
 
 })->name('login');
-*/
 
 //login2
 $app->post('/login', function () use ($app) {
@@ -101,6 +99,8 @@ $app->post('/login', function () use ($app) {
     }
 	
 });
+*/
+
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
