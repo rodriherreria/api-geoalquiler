@@ -40,67 +40,6 @@ $app->get('/usuarios', function () use ($app) {
 	$app->render(200,array('data' => $users));
 });
 
-/*
-$app->post('/login', function() use ($app) {
-    $req = $app->request;
-
-    $user= $req->params('user');
-    $pass = $req->params('pass');
-
-    try {
-        $query = $app->db->prepare("SELECT user, password FROM users
-                              WHERE user = :user AND password = :pass
-                              LIMIT 1");
-        $query->execute(
-            array(
-                ':user' => $user,
-                ':pass' => md5($pass)
-            )
-        );
-
-        $result = $query->fetch();
-    }
-
-    catch (PDOException $e) {
-        $app->flash('error', 'db error');
-    }
-
-
-    if ( empty($result) ) {
-        $app->flash('error', 'wrong user or pass');
-        $app->redirect('/login');
-    }
-
-    $app->redirect('/');
-
-})->name('login');
-
-//login2
-$app->post('/login', function () use ($app) {
-
-	$input = $app->request->getBody();
-	$errors = array();
-	
-	$email = $input['usuario'];
-    $password = $input['password'];
-	
-    $errors = array();
-    if ($email != "puntsdasdasdo@gmail.com") {
-        $errors['email'] = "Email is not found.";
-    } else if ($password != "123") {
-        $app->flash('email', $email);
-        $errors['password'] = "Password does not match.";
-    }
-	
-	  if (count($errors) > 0) {
-        $app->flash('errors', $errors);
-        $app->render(200,array('error' => FALSE, 'msg'   => 'Logeado exitosamente',
-        ));
-    }
-	
-});
-*/
-
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
