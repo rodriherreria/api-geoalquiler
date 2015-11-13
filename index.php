@@ -83,14 +83,14 @@ $app->get('/me', function () use ($app) {
 	if(empty($_SESSION["user"])){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged1',
         ));
 	}
 	$user = User::find($_SESSION["user"]);
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged2',
         ));
 	}
 	$app->render(200,array('data' => $user->toArray()));
