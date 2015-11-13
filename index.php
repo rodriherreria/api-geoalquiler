@@ -96,6 +96,12 @@ $app->get('/me', function () use ($app) {
 	$app->render(200,array('data' => $user->toArray()));
 });
 
+//logout
+$app->get('/logout', function() use($app) {
+    session_destroy();
+    $app->redirect('/');
+});
+
 //Insertar
 
 $app->post('/usuarios', function () use ($app) {
