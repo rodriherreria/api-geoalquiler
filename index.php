@@ -72,10 +72,7 @@ $app->post('/login', function () use ($app) {
             'msg'   => 'La password no coincide',
         ));
 	}
-	$_SESSION["user"] = $user->id;
-	$_SESSION["name"] = $user->name;
-	$_SESSION["email"] = $user->email;
-	$_SESSION["TipoUs"] = $user->tipous;
+	$_SESSION["user"] = $user->email;
 	$app->render(200,array());
 });
 
