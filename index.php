@@ -35,9 +35,65 @@ $app->render(200,array('msg' =>'API INDEX'));
 
 $app->get('/usuarios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$users = $db->table('users')->select('id', 'name', 'email')->get();
+	$users = $db->table('users')->select('id', 'name', 'email', 'tipous')->get();
 
 	$app->render(200,array('data' => $users));
+});
+
+//Login 
+
+$app->post('/login', function () use ($app) {
+	$input = $app->request->getBody();
+	$email = $input['email'];
+	if(empty($email)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Se requiere el Email',
+        ));
+	}
+	$password = $input['password'];
+	if(empty($password)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Se requiere la Contraseña',
+        ));
+	}
+	$db = $app->db->getConnection();
+	$user = $db->table('users')->select()->where('email', $email)->first();
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'El usuario no existe',
+        ));
+	}
+	if($user->password != $password){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'La password no coincide',
+        ));
+	}
+	$_SESSION["user"] = $user->id;
+	$_SESSION["name"] = $user->name;
+	$_SESSION["email"] = $user->email;
+	$_SESSION["TipoUs"] = $user->tipous;
+	$app->render(200,array());
+});
+
+$app->get('/me', function () use ($app) {
+	if(empty($_SESSION["user"])){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$user = User::find($_SESSION["user"]);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$app->render(200,array('data' => $user->toArray()));
 });
 
 //Insertar
@@ -112,6 +168,31 @@ $app->put('/usuarios/:id', function ($id) use ($app) {
     $user->save();
     $app->render(200,array('data' => $user->toArray()));
 });
+
+//Editar Tipo-Usuario
+$app->put('/usuariostipo/:id', function ($id) use ($app) {
+  $input = $app->request->getBody();
+
+	$tipo = $input['tipo'];
+	if(empty($tipo)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'tipo es requerido',
+        ));
+	}
+	
+	$user = User::find($id);
+	if(empty($user)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'user not found',
+        ));
+	}
+    $user->tipous = $tipo;
+    $user->save();
+    $app->render(200,array('data' => $user->toArray()));
+});
+
 
 //Buscar por ID
 
