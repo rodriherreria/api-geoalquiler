@@ -3,6 +3,8 @@
 require 'vendor/autoload.php';
 require 'Models/User.php';
 
+session_start();
+
 $app = new \Slim\Slim();
 
 $app->config('databases', [
@@ -44,6 +46,7 @@ $app->get('/usuarios', function () use ($app) {
 
 $app->post('/login', function () use ($app) {
 	$input = $app->request->getBody();
+
 	$email = $input['email'];
 	if(empty($email)){
 		$app->render(500,array(
@@ -72,7 +75,7 @@ $app->post('/login', function () use ($app) {
             'msg'   => 'La password no coincide',
         ));
 	}
-	$_SESSION["user"] = $user->email;
+	$_SESSION["user"] = $user->id;
 	$app->render(200,array());
 });
 
