@@ -83,24 +83,30 @@ $app->post('/login', function () use ($app) {
             'msg'   => 'La password no coincide',
         ));
 	}
-	$token = simple_encrypt($user->id, $app->enc_key);	
+
+	$token = simple_encrypt($user->id, $app->enc_key);
+
 	$app->render(200,array('token' => $token));
 });
 
 $app->get('/me', function () use ($app) {
+
 	$token = $app->request->headers->get('auth-token');
+
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged1',
         ));
 	}
+	
 	$id_user_token = simple_decrypt($token, $app->enc_key);
+
 	$user = User::find($id_user_token);
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged2',
         ));
 	}
 	$app->render(200,array('data' => $user->toArray()));
