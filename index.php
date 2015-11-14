@@ -288,6 +288,7 @@ $app->post('/anuncios', function () use ($app) {
             'msg'   => 'barrio is required',
         ));
 	}
+
     $user = new Anuncio();
     $user->titulo = $titulo;
     $user->descripcion = $descripcion;
@@ -364,6 +365,29 @@ $app->delete('/anuncios/:id', function ($id) use ($app) {
 
 	$user->delete();
 	$app->render(200);
+});
+// traer un anuncio//
+$app->get('/misanuncios', function () use ($app) {
+	
+		$token = $app->request->headers->get('auth-token');
+		if(empty($token)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Not logged',
+			));
+		}
+		$id_user_token = simple_decrypt($token, $app->enc_key);
+		$user = User::find($id_user_token);
+		if(empty($user)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Not logged',
+			));
+		}
+		
+	$db = $app->db->getConnection();
+	$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $user->id)->get();
+	$app->render(200,array('data' => $anuncios));
 });
 
 $app->run();
