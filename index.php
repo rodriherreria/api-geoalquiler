@@ -386,8 +386,8 @@ $app->get('/misanuncios', function () use ($app) {
 		}
 		
 	$db = $app->db->getConnection();
-	$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $user->id)->get();
-	$app->render(200,array('data' => $anuncios));
+	$users = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $user->id)->get();
+	$app->render(200,array('data' => $users));
 });
 
 $app->run();
