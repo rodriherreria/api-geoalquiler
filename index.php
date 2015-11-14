@@ -249,7 +249,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$users = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'userid')->get();
+	$users = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid')->get();
 
 	$app->render(200,array('data' => $users));
 });
