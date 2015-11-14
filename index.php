@@ -249,7 +249,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$users = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto')->get();
+	$users = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'userid')->get();
 
 	$app->render(200,array('data' => $users));
 });
@@ -280,10 +280,19 @@ $app->post('/anuncios', function () use ($app) {
             'msg'   => 'precio is required',
         ));
 	}
+
+	$barrio = $input['barrio'];
+	if(empty($barrio)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'barrio is required',
+        ));
+	}
     $user = new Anuncio();
     $user->titulo = $titulo;
     $user->descripcion = $descripcion;
     $user->precio = $precio;
+    $user->barrio = $barrio;
     $user->save();
     $app->render(200,array('data' => $user->toArray()));
 });
