@@ -245,13 +245,17 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 	$app->render(200);
 });
 
+
+////////////////////////////////////////////////////////
+
+
 //Conexion con la tabla anuncio
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$users = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid')->get();
+	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid')->get();
 
-	$app->render(200,array('data' => $users));
+	$app->render(200,array('data' => $anuncios));
 });
 
 //Insertar Anuncio
@@ -289,13 +293,13 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
-    $user = new Anuncio();
-    $user->titulo = $titulo;
-    $user->descripcion = $descripcion;
-    $user->precio = $precio;
-    $user->barrio = $barrio;
-    $user->save();
-    $app->render(200,array('data' => $user->toArray()));
+    $anuncio = new Anuncio();
+    $anuncio->titulo = $titulo;
+    $anuncio->descripcion = $descripcion;
+    $anuncio->precio = $precio;
+    $anuncio->barrio = $barrio;
+    $anuncio->save();
+    $app->render(200,array('data' => $anuncio->toArray()));
 });
 
 
@@ -325,46 +329,46 @@ $app->put('/anuncios/:id', function ($id) use ($app) {
             'msg'   => 'email is required',
         ));
 	}
-	$user = Anuncio::find($id);
-	if(empty($user)){
+	$anuncio = Anuncio::find($id);
+	if(empty($anuncio)){
 		$app->render(404,array(
 			'error' => TRUE,
             'msg'   => 'user not found',
         ));
 	}
-    $user->titulo = $titulo;
-    $user->descripcion = $descripcion;
-    $user->precio = $precio;
-    $user->save();
-    $app->render(200,array('data' => $user->toArray()));
+    $anuncio->titulo = $titulo;
+    $anuncio->descripcion = $descripcion;
+    $anuncio->precio = $precio;
+    $anuncio->save();
+    $app->render(200,array('data' => $anuncio->toArray()));
 });
 
 //Buscar Anuncio
 
 $app->get('/anuncios/:id', function ($id) use ($app) {
-	$user = Anuncio::find($id);
-	if(empty($user)){
+	$anuncio = Anuncio::find($id);
+	if(empty($anuncio)){
 		$app->render(404,array(
 			'error' => TRUE,
             'msg'   => 'Anuncio not found',
         ));
 	}
 	
-	$app->render(200,array('data' => $user->toArray()));
+	$app->render(200,array('data' => $anuncio->toArray()));
 });
 
 // Borrar Anuncio
 
 $app->delete('/anuncios/:id', function ($id) use ($app) {
-	$user = Anuncio::find($id);
-	if(empty($user)){
+	$anuncio = Anuncio::find($id);
+	if(empty($anuncio)){
 		$app->render(404,array(
 			'error' => TRUE,
             'msg'   => 'user not found',
         ));
 	}
 
-	$user->delete();
+	$anuncio->delete();
 	$app->render(200);
 });
 // traer un anuncio//
@@ -378,8 +382,8 @@ $app->get('/misanuncios', function () use ($app) {
 			));
 		}
 		$id_user_token = simple_decrypt($token, $app->enc_key);
-		$user = User::find($id_user_token);
-		if(empty($user)){
+		$anuncio = User::find($id_user_token);
+		if(empty($anuncio)){
 			$app->render(500,array(
 				'error' => TRUE,
 				'msg'   => 'Not logged',
@@ -387,8 +391,8 @@ $app->get('/misanuncios', function () use ($app) {
 		}
 		
 	$db = $app->db->getConnection();
-	$users = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $user->id)->get();
-	$app->render(200,array('data' => $users));
+	$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $anuncio->id)->get();
+	$app->render(200,array('data' => $anuncios));
 });
 
 $app->run();
