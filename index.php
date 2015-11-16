@@ -353,6 +353,8 @@ $app->get('/anuncios/:id', function ($id) use ($app) {
             'msg'   => 'Anuncio not found',
         ));
 	}
+
+	$anuncio->user = User::find($anuncio->usersid);
 	
 	$app->render(200,array('data' => $anuncio->toArray()));
 });
