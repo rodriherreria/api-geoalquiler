@@ -342,14 +342,15 @@ $app->put('/anuncios/:id', function ($id) use ($app) {
 //Buscar Anuncio
 
 $app->get('/anuncios/:id', function ($id) use ($app) {
-	$user = Anuncio::find($id);
-	if(empty($user)){
+	$anuncio = Anuncio::find($id);
+	if(empty($anuncio)){
 		$app->render(404,array(
 			'error' => TRUE,
             'msg'   => 'Anuncio not found',
         ));
 	}
-	$app->render(200,array('data' => $user->toArray()));
+	$anuncio->user = User::find($anuncio->usersid)
+	$app->render(200,array('data' => $anuncio->toArray()));
 });
 
 // Borrar Anuncio
