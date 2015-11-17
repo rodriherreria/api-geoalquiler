@@ -316,7 +316,7 @@ $app->post('/anuncios', function () use ($app) {
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
     $anuncio->barrio = $barrio;
-	$anuncios->usersid = $user->id;
+	$anuncio->usersid = $user->id;
     $anuncio->save();
     $app->render(200,array('data' => $anuncio->toArray()));
 });
