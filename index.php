@@ -2,6 +2,7 @@
 
 require 'vendor/autoload.php';
 require 'Models/User.php';
+require 'Models/Anuncios.php';
 
 function simple_encrypt($text,$salt){  
    return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $salt, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
@@ -262,6 +263,23 @@ $app->get('/anuncios', function () use ($app) {
 
 $app->post('/anuncios', function () use ($app) {
 
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+
   $input = $app->request->getBody();
 	$titulo = $input['titulo'];
 	if(empty($titulo)){
@@ -298,6 +316,7 @@ $app->post('/anuncios', function () use ($app) {
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
     $anuncio->barrio = $barrio;
+	$anuncios->usersid = $user->id;
     $anuncio->save();
     $app->render(200,array('data' => $anuncio->toArray()));
 });
