@@ -141,8 +141,8 @@ $app->post('/usuarios', function () use ($app) {
         ));
 	}
 
-	$telfono = $input['telefono'];
-	if(empty($telfono)){
+	$telefono = $input['telefono'];
+	if(empty($telefono)){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'telefono is required',
