@@ -165,11 +165,11 @@ $app->put('/usuarios/:id', function ($id) use ($app) {
             'msg'   => 'name is required',
         ));
 	}
-	$password = $input['password'];
-	if(empty($password)){
+	$telefono = $input['telefono'];
+	if(empty($telefono)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'password is required',
+            'msg'   => 'telefono is required',
         ));
 	}
 	$email = $input['email'];
@@ -187,7 +187,7 @@ $app->put('/usuarios/:id', function ($id) use ($app) {
         ));
 	}
     $user->name = $name;
-    $user->password = $password;
+    $user->telefono = $telefono;
     $user->email = $email;
     $user->save();
     $app->render(200,array('data' => $user->toArray()));
