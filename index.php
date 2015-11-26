@@ -260,7 +260,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'longitud', 'latitud')->get();
+	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud')->get();
 
 	$app->render(200,array('data' => $anuncios));
 });
@@ -317,11 +317,20 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
+	$tipo = $input['tipo'];
+	if(empty($tipo)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'tipo is required',
+        ));
+	}
+
     $anuncio = new Anuncio();
     $anuncio->titulo = $titulo;
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
     $anuncio->barrio = $barrio;
+    $anuncio->tipo = $tipo;
 	$anuncio->usersid = $user->id;
     $anuncio->save();
     $app->render(200,array('data' => $anuncio->toArray()));
