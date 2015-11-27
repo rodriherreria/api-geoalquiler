@@ -265,6 +265,15 @@ $app->get('/anuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+//Conexion con la tabla barrio
+
+$app->get('/barrios', function () use ($app) {
+	$db = $app->db->getConnection();
+	$barrios = $db->table('barrios')->select('idbarrios', 'nombre')->get();
+
+	$app->render(200,array('data' => $anuncios));
+});
+
 //Insertar Anuncio
 
 $app->post('/anuncios', function () use ($app) {
