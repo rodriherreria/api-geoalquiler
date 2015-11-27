@@ -269,7 +269,7 @@ $app->get('/anuncios', function () use ($app) {
 
 $app->get('/barrios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$barrios = $db->table('barrios')->select('idbarrios', 'nombre')->get();
+	$barrios = $db->table('barrios')->select('idbarrios', 'nombres')->get();
 
 	$app->render(200,array('data' => $anuncios));
 });
