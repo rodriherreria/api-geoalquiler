@@ -318,6 +318,30 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
+	$habitaciones = $input['habitaciones'];
+	if(empty($habitaciones)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'habitaciones is required',
+        ));
+	}
+
+	$banios = $input['banios'];
+	if(empty($banios)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'banios is required',
+        ));
+	}
+
+	$garage = $input['garage'];
+	if(empty($garage)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'garage is required',
+        ));
+	}
+
 	$barrio = $input['barrio'];
 	if(empty($barrio)){
 		$app->render(500,array(
@@ -338,6 +362,9 @@ $app->post('/anuncios', function () use ($app) {
     $anuncio->titulo = $titulo;
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
+    $anuncio->habitaciones = $habitaciones;
+    $anuncio->banios = $banios;
+    $anuncio->garage = $garage;
     $anuncio->barrio = $barrio;
     $anuncio->tipo = $tipo;
 	$anuncio->usersid = $user->id;
