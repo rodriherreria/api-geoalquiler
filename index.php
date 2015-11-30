@@ -342,11 +342,35 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
+	$direccion = $input['direccion'];
+	if(empty($direccion)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'direccion is required',
+        ));
+	}
+
 	$barrio = $input['barrio'];
 	if(empty($barrio)){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'barrio is required',
+        ));
+	}
+
+	$longitud = $input['longitud'];
+	if(empty($longitud)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'longitud is required',
+        ));
+	}
+
+	$latitud = $input['latitud'];
+	if(empty($latitud)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'latitud is required',
         ));
 	}
 
@@ -365,7 +389,10 @@ $app->post('/anuncios', function () use ($app) {
     $anuncio->habitaciones = $habitaciones;
     $anuncio->banios = $banios;
     $anuncio->garage = $garage;
+    $anuncio->direccion = $direccion;
     $anuncio->barrio = $barrio;
+    $anuncio->longitud = $longitud;
+    $anuncio->latitud = $latitud;
     $anuncio->tipo = $tipo;
 	$anuncio->usersid = $user->id;
     $anuncio->save();
