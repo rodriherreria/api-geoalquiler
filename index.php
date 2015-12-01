@@ -260,7 +260,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud')->get();
+	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->get();
 
 	$app->render(200,array('data' => $anuncios));
 });
