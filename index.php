@@ -383,36 +383,16 @@ $app->post('/anuncios', function () use ($app) {
 	}
 
 	$garage = $input['garage'];
-	if(empty($garage)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'garage is required',
-        ));
-	}
+	
 
 	$balcon = $input['balcon'];
-	if(empty($balcon)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'balcon is required',
-        ));
-	}
+	
 
 	$living = $input['living'];
-	if(empty($living)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'living is required',
-        ));
-	}
+	
 
 	$comedor = $input['comedor'];
-	if(empty($comedor)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'comedor is required',
-        ));
-	}
+	
 
     $anuncio = new Anuncio();
     $anuncio->titulo = $titulo;
