@@ -334,14 +334,6 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
-	$garage = $input['garage'];
-	if(empty($garage)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'garage is required',
-        ));
-	}
-
 	$direccion = $input['direccion'];
 	if(empty($direccion)){
 		$app->render(500,array(
@@ -355,6 +347,14 @@ $app->post('/anuncios', function () use ($app) {
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'barrio is required',
+        ));
+	}
+
+	$suptotal = $input['suptotal'];
+	if(empty($suptotal)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'suptotal is required',
         ));
 	}
 
@@ -382,18 +382,54 @@ $app->post('/anuncios', function () use ($app) {
         ));
 	}
 
+	$garage = $input['garage'];
+	if(empty($garage)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'garage is required',
+        ));
+	}
+
+	$balcon = $input['balcon'];
+	if(empty($balcon)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'balcon is required',
+        ));
+	}
+
+	$living = $input['living'];
+	if(empty($living)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'living is required',
+        ));
+	}
+
+	$comedor = $input['comedor'];
+	if(empty($comedor)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'comedor is required',
+        ));
+	}
+
     $anuncio = new Anuncio();
     $anuncio->titulo = $titulo;
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
     $anuncio->habitaciones = $habitaciones;
     $anuncio->banios = $banios;
-    $anuncio->garage = $garage;
     $anuncio->direccion = $direccion;
     $anuncio->barrio = $barrio;
     $anuncio->longitud = $longitud;
     $anuncio->latitud = $latitud;
+    $anuncio->suptotal = $suptotal;
     $anuncio->tipo = $tipo;
+    $anuncio->garage = $garage;
+    $anuncio->balcon = $balcon;
+    $anuncio->living = $living;
+    $anuncio->comedor = $comedor;
 	$anuncio->usersid = $user->id;
     $anuncio->save();
     $app->render(200,array('data' => $anuncio->toArray()));
