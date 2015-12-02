@@ -260,7 +260,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 
 $app->get('/anuncios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$anuncios = $db->table('anuncios')->select('id', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->get();
+	$anuncios = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->get();
 
 	$app->render(200,array('data' => $anuncios));
 });
@@ -296,6 +296,13 @@ $app->post('/anuncios', function () use ($app) {
 	}
 
   $input = $app->request->getBody();
+  $inmueble = $input['inmueble'];
+	if(empty($inmueble)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'inmueble is required',
+        ));
+	}
 	$titulo = $input['titulo'];
 	if(empty($titulo)){
 		$app->render(500,array(
@@ -395,6 +402,7 @@ $app->post('/anuncios', function () use ($app) {
 	
 
     $anuncio = new Anuncio();
+    $anuncio->inmueble = $inmueble;
     $anuncio->titulo = $titulo;
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
