@@ -266,6 +266,7 @@ $app->get('/anuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+
 //Conexion con la tabla barrio
 
 $app->get('/barrios', function () use ($app) {
@@ -515,6 +516,17 @@ $app->get('/misanuncios', function () use ($app) {
 	$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio', 'foto')->where('usersid', $anuncio->id)->get();
 	$app->render(200,array('data' => $anuncios));
 });
+
+//Conexion favoritos
+
+$app->get('/fav', function () use ($app) {
+	$db = $app->db->getConnection();
+	$fav = $db->table('favortios')->select('idfavoritos', 'idanuncios', 'idusers')->get();
+
+	$app->render(200,array('data' => $fav));
+});
+
+// agregar favoritos
 
 $app->post('/favoritos', function () use ($app) {
   $token = $app->request->headers->get('auth-token');
