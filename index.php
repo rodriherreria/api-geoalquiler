@@ -72,14 +72,14 @@ $app->post('/login', function () use ($app) {
         ));
 	}
 	$db = $app->db->getConnection();
-	$user = (object) $db->table('users')->select()->where('email', $email)->first();
+	$user = $db->table('users')->select()->where('email', $email)->first();
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'El usuario no existe',
         ));
 	}
-	if($user->password != $password){
+	if($user['password'] != $password){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'La password no coincide',
