@@ -79,7 +79,7 @@ $app->post('/login', function () use ($app) {
             'msg'   => 'El usuario no existe',
         ));
 	}
-	if($user['password'] != $password){
+	if($user->password != $password){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'La password no coincide',
