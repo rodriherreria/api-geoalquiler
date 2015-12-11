@@ -72,7 +72,7 @@ $app->post('/login', function () use ($app) {
         ));
 	}
 	$db = $app->db->getConnection();
-	$user = $db->table('users')->select()->where('email', $email)->first();
+	$user = (object) $db->table('users')->select()->where('email', $email)->first();
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
