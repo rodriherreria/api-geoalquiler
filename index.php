@@ -562,7 +562,7 @@ $app->post('/favoritos', function () use ($app) {
     $app->render(200,array('data' => $favorito->toArray()));
 });
 
-// Borrar favortios
+// Traer favorito especifico para borrar
 
 $app->post('/misfavoritos', function () use ($app) {
 	
@@ -599,6 +599,32 @@ $app->post('/misfavoritos', function () use ($app) {
 	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
 	$app->render(200,array('data' => $favoritos));
+});
+
+
+// Borrar favortio
+
+$app->delete('/deletefavoritos', function () use ($app) {
+	
+	$input = $app->request->getBody();
+  
+	$idfavorito = $input['idfavorito'];
+	if(empty($idfavorito)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id favorito is required',
+        ));
+	}
+	
+	$favorito = Favorito::find($idfavorito);
+	if(empty($favorito)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'favorito not found',
+        ));
+	}
+	$favorito->delete();
+	$app->render(200);
 });
 
 // listar mis favoritos
