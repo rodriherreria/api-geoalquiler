@@ -564,7 +564,7 @@ $app->post('/favoritos', function () use ($app) {
 
 // Borrar favortios
 
-$app->get('/misfavoritos', function () use ($app) {
+$app->post('/misfavoritos', function () use ($app) {
 	
    $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
@@ -584,10 +584,19 @@ $app->get('/misfavoritos', function () use ($app) {
 	}
 	
 	
-		
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->AND('idanuncios', $idanuncio)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
