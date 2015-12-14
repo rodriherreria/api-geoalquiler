@@ -564,7 +564,7 @@ $app->post('/favoritos', function () use ($app) {
 
 // Traer favorito especifico para borrar
 
-$app->post('/misfavoritos', function () use ($app) {
+$app->get('/misfavoritos', function () use ($app) {
 	
    $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
