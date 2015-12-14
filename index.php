@@ -596,7 +596,7 @@ $app->post('/misfavoritos', function () use ($app) {
 	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->orWhere('idanuncios', $idanuncio)->get();
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
