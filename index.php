@@ -608,7 +608,7 @@ $app->delete('/deletefavoritos', function () use ($app) {
 	
 	$input = $app->request->getBody();
   
-	$idfavorito = $input['idfavorito'];
+	$idfavoritos = $input['idfavoritos'];
 	if(empty($idfavorito)){
 		$app->render(500,array(
 			'error' => TRUE,
@@ -616,7 +616,7 @@ $app->delete('/deletefavoritos', function () use ($app) {
         ));
 	}
 	
-	$favorito = Favorito::find($idfavorito);
+	$favorito = Favorito::find($idfavoritos);
 	if(empty($favorito)){
 		$app->render(404,array(
 			'error' => TRUE,
