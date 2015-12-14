@@ -517,6 +517,131 @@ $app->get('/misanuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+// agregar favoritos
+
+$app->post('/favoritos', function () use ($app) {
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+  $input = $app->request->getBody();
+  
+  $idanuncio = $input['idanuncios'];
+	if(empty($idanuncio)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id anuncio is required',
+        ));
+	}
+	
+	$favorito = new Favorito();
+    $favorito->idanuncios = $idanuncio;
+    $favorito->idusers = $user->id;
+    $favorito->save();
+    $app->render(200,array('data' => $favorito->toArray()));
+});
+
+// Borrar favortio
+
+$app->delete('/deletefavoritos', function () use ($app) {
+	
+	$input = $app->request->getBody();
+  
+	$idfavoritos = $input['idfavoritos'];
+	if(empty($idfavoritos)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id favorito is required',
+        ));
+	}
+	
+	$favorito = Favorito::find($idfavoritos);
+	if(empty($favorito)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'favorito not found',
+        ));
+	}
+	$favorito->delete();
+	$app->render(200);
+});
+
+
+$app->get('/misfavoritos', function () use ($app) {
+	
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->AND('idanuncios', $idanuncio)->get();
+	
+	$app->render(200,array('data' => $favoritos));
+});
+
+// listar mis favoritos
+$app->get('/misfavoritoslist', function () use ($app) {
+	
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
+	
+	$anunciosfav = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->where('id', $favoritos->idanuncios)->get();
+	
+	$app->render(200,array('data' => $anunciosfav));
+});
 
 
 $app->run();
