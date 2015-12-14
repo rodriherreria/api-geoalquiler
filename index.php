@@ -562,49 +562,27 @@ $app->post('/favoritos', function () use ($app) {
     $app->render(200,array('data' => $favorito->toArray()));
 });
 
-// Borrar favortio
-
-$app->delete('/deletefavoritos', function () use ($app) {
-	
-	$input = $app->request->getBody();
-  
-	$idfavoritos = $input['idfavoritos'];
-	if(empty($idfavoritos)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'Id favorito is required',
-        ));
-	}
-	
-	$favorito = Favorito::find($idfavoritos);
-	if(empty($favorito)){
-		$app->render(404,array(
-			'error' => TRUE,
-            'msg'   => 'favorito not found',
-        ));
-	}
-	$favorito->delete();
-	$app->render(200);
-});
-
+// Borrar favortios
 
 $app->get('/misfavoritos', function () use ($app) {
 	
-	$token = $app->request->headers->get('auth-token');
+   $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged1',
+            'msg'   => 'Not logged 1',
         ));
 	}
+	
 	$id_user_token = simple_decrypt($token, $app->enc_key);
 	$user = User::find($id_user_token);
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged2',
+            'msg'   => 'Not logged 2',
         ));
 	}
+	
 	
 	$input = $app->request->getBody();
   
@@ -624,6 +602,7 @@ $app->get('/misfavoritos', function () use ($app) {
 });
 
 // listar mis favoritos
+
 $app->get('/misfavoritoslist', function () use ($app) {
 	
 	$token = $app->request->headers->get('auth-token');
