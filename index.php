@@ -517,6 +517,15 @@ $app->get('/misanuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+//Conexion con la tabla barrio
+
+$app->get('/fav', function () use ($app) {
+	$db = $app->db->getConnection();
+	$fav = $db->table('favoritos')->select('idfavoritos', 'idanuncios', 'idusers')->get();
+
+	$app->render(200,array('data' => $fav));
+});
+
 // agregar favoritos
 
 $app->post('/favoritos', function () use ($app) {
@@ -585,7 +594,7 @@ $app->get('/misfavoritos', function () use ($app) {
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged1',
         ));
 	}
 	$id_user_token = simple_decrypt($token, $app->enc_key);
@@ -593,7 +602,7 @@ $app->get('/misfavoritos', function () use ($app) {
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged',
+            'msg'   => 'Not logged2',
         ));
 	}
 	
