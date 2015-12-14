@@ -573,7 +573,7 @@ $app->get('/misfavoritos', function () use ($app) {
             'msg'   => 'Not logged 1',
         ));
 	}
-	
+
 	$id_user_token = simple_decrypt($token, $app->enc_key);
 	$user = User::find($id_user_token);
 	if(empty($user)){
@@ -584,19 +584,10 @@ $app->get('/misfavoritos', function () use ($app) {
 	}
 	
 	
-	$input = $app->request->getBody();
-  
-	  $idanuncio = $input['idanuncio'];
-		if(empty($idanuncio)){
-			$app->render(500,array(
-				'error' => TRUE,
-				'msg'   => 'Id anuncio is required',
-			));
-		}
-	
+		
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->AND('idanuncios', $idanuncio)->get();
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
