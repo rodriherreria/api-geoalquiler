@@ -272,7 +272,7 @@ $app->get('/anuncios', function () use ($app) {
 
 $app->get('/barrios', function () use ($app) {
 	$db = $app->db->getConnection();
-	$barrios = $db->table('barrios')->select('idbarrios', 'nombres')->get();
+	$barrios = $db->table('barrios')->select('id', 'nombres')->get();
 
 	$app->render(200,array('data' => $barrios));
 });
@@ -519,7 +519,7 @@ $app->get('/misanuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
-//Conexion con la tabla barrio
+//Conexion con la tabla favoritos
 
 $app->get('/fav', function () use ($app) {
 	$db = $app->db->getConnection();
