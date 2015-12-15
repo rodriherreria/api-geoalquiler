@@ -635,9 +635,9 @@ $app->delete('/delfavoritos', function () use ($app) {
 	
 	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
-	$id = $favoritos->id;
+	$idfav = $favoritos->id;
 	
-	$favorito = Favorito::find($id);
+	$favorito = Favorito::find($idfav);
 	if(empty($favorito)){
 		$app->render(404,array(
 			'error' => TRUE,
