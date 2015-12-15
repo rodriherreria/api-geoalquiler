@@ -564,8 +564,9 @@ $app->post('/favoritos', function () use ($app) {
 
 // Traer favorito especifico para borrar
 
+// agregar favoritos
 
-$app->get('/misfavoritos/:id', function ($id) use ($app) {
+$app->get('/misfavoritos', function () use ($app) {
   $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
 		$app->render(500,array(
@@ -582,49 +583,32 @@ $app->get('/misfavoritos/:id', function ($id) use ($app) {
         ));
 	}
 	
-		
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $id)->get();
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
 
 
-// Borrar favortio
-
-$app->delete('/deletefavoritos', function () use ($app) {
-	
-	$input = $app->request->getBody();
-  
-	$idfavoritos = $input['idfavoritos'];
-	if(empty($idfavorito)){
-		$app->render(500,array(
-			'error' => TRUE,
-            'msg'   => 'Id favorito is required',
-        ));
-	}
-	
-	$favorito = Favorito::find($idfavoritos);
-	if(empty($favorito)){
-		$app->render(404,array(
-			'error' => TRUE,
-            'msg'   => 'favorito not found',
-        ));
-	}
-
-	$favorito->delete();
-	$app->render(200);
-});
 
 // ver favorito y borrar 
 $app->delete('/delfavoritos', function () use ($app) {
-	
-	$token = $app->request->headers->get('auth-token');
+  $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged 1',
+            'msg'   => 'Not logged 13',
         ));
 	}
 	$id_user_token = simple_decrypt($token, $app->enc_key);
@@ -632,9 +616,10 @@ $app->delete('/delfavoritos', function () use ($app) {
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged 2',
+            'msg'   => 'Not logged 15',
         ));
 	}
+	
 	
 	$input = $app->request->getBody();
   
