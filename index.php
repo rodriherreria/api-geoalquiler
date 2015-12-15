@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 require 'Models/User.php';
 require 'Models/Anuncios.php';
+require 'Models/Barrios.php';
 require 'Models/Favoritos.php';
 
 function simple_encrypt($text,$salt){  
@@ -475,7 +476,8 @@ $app->get('/anuncios/:id', function ($id) use ($app) {
 	}
 
 	$anuncio->user = User::find($anuncio->usersid);
-	
+	$anuncio->barrio = Barrio::find($anuncio->barrio);
+
 	$app->render(200,array('data' => $anuncio->toArray()));
 });
 
