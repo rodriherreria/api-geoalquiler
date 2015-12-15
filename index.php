@@ -635,7 +635,7 @@ $app->delete('/delfavoritos', function () use ($app) {
 	
 	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
-	$idfavoritos = $favoritos->idfavoritos;
+	$idfavoritos = $favoritos->id;
 	
 	$favorito = Favorito::find($idfavoritos);
 	if(empty($favorito)){
