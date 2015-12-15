@@ -521,7 +521,7 @@ $app->get('/misanuncios', function () use ($app) {
 
 $app->get('/fav', function () use ($app) {
 	$db = $app->db->getConnection();
-	$fav = $db->table('favoritos')->select('idfavoritos', 'idanuncios', 'idusers')->get();
+	$fav = $db->table('favoritos')->select('id', 'idanuncios', 'idusers')->get();
 
 	$app->render(200,array('data' => $fav));
 });
@@ -595,7 +595,7 @@ $app->get('/misfavoritos', function () use ($app) {
 	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
@@ -633,7 +633,7 @@ $app->delete('/delfavoritos', function () use ($app) {
 	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
 	$idfavoritos = $favoritos->idfavoritos;
 	
@@ -672,7 +672,7 @@ $app->get('/misfavoritoslist', function () use ($app) {
 	
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
 	
 	$anunciosfav = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->where('id', $favoritos->idanuncios)->get();
 	
