@@ -627,6 +627,53 @@ $app->delete('/deletefavoritos', function () use ($app) {
 	$app->render(200);
 });
 
+// ver favorito y borrar 
+$app->delete('/delfavoritos', function () use ($app) {
+	
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 1',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 2',
+        ));
+	}
+	
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	
+	$idfav = $favoritos->idfavoritos;
+	
+	$favorito = Favorito::find($idfav);
+	if(empty($favorito)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'favorito not found',
+        ));
+	}
+	$favorito->delete();
+	$app->render(200);
+		
+});
+
 // listar mis favoritos
 
 $app->get('/misfavoritoslist', function () use ($app) {
