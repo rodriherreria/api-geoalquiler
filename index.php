@@ -635,13 +635,13 @@ $app->delete('/delfavoritos', function () use ($app) {
 	
 	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
 	
-	$idfavoritos = $favoritos->id;
+	$id = $favoritos->id;
 	
-	$favorito = Favorito::find($idfavoritos);
+	$favorito = Favorito::find($id);
 	if(empty($favorito)){
 		$app->render(404,array(
 			'error' => TRUE,
-            'msg'   => 'favorito not found',
+            'msg'   => 'favorito not found 4',
         ));
 	}
 	$favorito->delete();
