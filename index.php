@@ -623,6 +623,7 @@ $app->delete('/deletefavoritos', function () use ($app) {
             'msg'   => 'favorito not found',
         ));
 	}
+	
 	$favorito->delete();
 	$app->render(200);
 });
