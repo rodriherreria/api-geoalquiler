@@ -564,39 +564,28 @@ $app->post('/favoritos', function () use ($app) {
 
 // Traer favorito especifico para borrar
 
-$app->get('/misfavoritos', function () use ($app) {
-	
-   $token = $app->request->headers->get('auth-token');
+
+$app->get('/misfavoritos/:id', function ($id) use ($app) {
+  $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged 1',
+            'msg'   => 'Not logged 12',
         ));
 	}
-
 	$id_user_token = simple_decrypt($token, $app->enc_key);
 	$user = User::find($id_user_token);
 	if(empty($user)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Not logged 2',
+            'msg'   => 'Not logged 15',
         ));
 	}
 	
-	
-	$input = $app->request->getBody();
-  
-	  $idanuncio = $input['idanuncio'];
-		if(empty($idanuncio)){
-			$app->render(500,array(
-				'error' => TRUE,
-				'msg'   => 'Id anuncio is required',
-			));
-		}
-	
+		
 	$db = $app->db->getConnection();
 	
-	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	$favoritos = $db->table('favoritos')->select('idfavoritos', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $id)->get();
 	
 	$app->render(200,array('data' => $favoritos));
 });
@@ -623,7 +612,7 @@ $app->delete('/deletefavoritos', function () use ($app) {
             'msg'   => 'favorito not found',
         ));
 	}
-	
+
 	$favorito->delete();
 	$app->render(200);
 });
