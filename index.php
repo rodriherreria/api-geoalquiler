@@ -673,10 +673,14 @@ $app->get('/misfavoritoslist', function () use ($app) {
 	$db = $app->db->getConnection();
 	
 	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
-	
-	$anunciosfav = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor')->where('id', $favoritos->idanuncios)->get();
-	
-	$app->render(200,array('data' => $anunciosfav));
+
+	foreach ($favoritos as $key => $favoritos) {
+		$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio')->where('id', $favoritos->idanuncios)->get();
+		
+		$favoritos[$key]->anuncios = $anuncios;
+	}
+		
+	$app->render(200,array('data' => $favoritos));
 });
 
 
