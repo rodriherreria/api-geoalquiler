@@ -697,10 +697,10 @@ $app->get('/chats', function () use ($app) {
 
 //Buscar por ID
 
-$app->get('/chat/:id', function ($id) use ($app) {
+$app->get('/chat/:id', function ($idr) use ($app) {
 	
-	$user = User::find($id);
-	if(empty($user)){
+	$userr = User::find($idr);
+	if(empty($userr)){
 		$app->render(404,array(
 			'error' => TRUE,
             'msg'   => 'user not found',
@@ -725,11 +725,11 @@ $app->get('/chat/:id', function ($id) use ($app) {
 
 	$db = $app->db->getConnection();
 	$chats = $db->table('chats')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')
-								->where('iduserreceptor', $id)
+								->where('iduserreceptor', $idr)
 								->where('iduseremisor', $user->id)
 								->get();
 
-	$app->render(200,array('data' => $user->toArray()));
+	$app->render(200,array('data' => $userr->toArray()));
 	$app->render(200,array('data' => $chats->toArray()));
 
 });
