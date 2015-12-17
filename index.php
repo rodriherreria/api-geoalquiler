@@ -749,7 +749,7 @@ $app->post('/enviarchat', function () use ($app) {
 	$chat = new Chat();
     $chat->iduserreceptor = $iduserreceptor;
     $chat->mensaje = $mensaje;
-    $chat->idusers = $user->id;
+    $chat->iduseremisor = $user->id;
     $chat->save();
     $app->render(200,array('data' => $chat->toArray()));
 });
