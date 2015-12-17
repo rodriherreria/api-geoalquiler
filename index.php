@@ -731,8 +731,8 @@ $app->post('/enviarchat', function () use ($app) {
 	
   $input = $app->request->getBody();
   
-  $idreceptor = $input['idreceptor'];
-	if(empty($idreceptor)){
+  $iduserreceptor = $input['iduserreceptor'];
+	if(empty($iduserreceptor)){
 		$app->render(500,array(
 			'error' => TRUE,
             'msg'   => 'Id receptor es necesario',
@@ -749,9 +749,9 @@ $app->post('/enviarchat', function () use ($app) {
 	
 	
 	$chat = new Chat();
-    $chat->iduserreceptor = $idreceptor;
-    $chat->iduseremisor = $user->id;
+    $chat->iduserreceptor = $iduserreceptor;
     $chat->mensaje = $mensaje;
+    $chat->iduseremisor = $user->id;
     $chat->save();
     $app->render(200,array('data' => $chat->toArray()));
 });
