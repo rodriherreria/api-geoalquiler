@@ -690,7 +690,7 @@ $app->get('/misfavoritoslist', function () use ($app) {
 
 $app->get('/chats', function () use ($app) {
 	$db = $app->db->getConnection();
-	$chats = $db->table('chat')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')->get();
+	$chats = $db->table('chats')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')->get();
 
 	$app->render(200,array('data' => $chats));
 });
