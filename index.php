@@ -5,6 +5,7 @@ require 'Models/User.php';
 require 'Models/Anuncios.php';
 require 'Models/Barrios.php';
 require 'Models/Favoritos.php';
+require 'Models/Chats.php';
 
 function simple_encrypt($text,$salt){  
    return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $salt, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
@@ -711,8 +712,7 @@ $app->get('/chat/:id', function ($id) use ($app) {
 //Insertar Mensaje
 
 $app->post('/enviarchat', function () use ($app) {
-	
-	$token = $app->request->headers->get('auth-token');
+  $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
 		$app->render(500,array(
 			'error' => TRUE,
@@ -720,7 +720,6 @@ $app->post('/enviarchat', function () use ($app) {
         ));
 	}
 	$id_user_token = simple_decrypt($token, $app->enc_key);
-
 	$user = User::find($id_user_token);
 	if(empty($user)){
 		$app->render(500,array(
@@ -735,7 +734,7 @@ $app->post('/enviarchat', function () use ($app) {
 	if(empty($iduserreceptor)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Id receptor es necesario',
+            'msg'   => 'Id receptor is required',
         ));
 	}
 
@@ -747,15 +746,13 @@ $app->post('/enviarchat', function () use ($app) {
         ));
 	}
 	
-	
 	$chat = new Chat();
     $chat->iduserreceptor = $iduserreceptor;
     $chat->mensaje = $mensaje;
-    $chat->iduseremisor = $user->id;
+    $chat->idusers = $user->id;
     $chat->save();
     $app->render(200,array('data' => $chat->toArray()));
 });
-
 
 
 $app->run();
