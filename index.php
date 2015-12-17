@@ -735,7 +735,7 @@ $app->post('/enviarchat', function () use ($app) {
 	if(empty($idreceptor)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Id anuncio is required',
+            'msg'   => 'Id receptor es necesario',
         ));
 	}
 
@@ -743,7 +743,7 @@ $app->post('/enviarchat', function () use ($app) {
 	if(empty($mensaje)){
 		$app->render(500,array(
 			'error' => TRUE,
-            'msg'   => 'Id anuncio is required',
+            'msg'   => 'Mensaje es necesario',
         ));
 	}
 	
