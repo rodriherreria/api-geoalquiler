@@ -729,7 +729,7 @@ $app->get('/chat/:id', function ($idr) use ($app) {
 								->where('iduseremisor', $user->id)
 								->get();
 
-	$app->render(200,array('data' => $chats->toArray()));
+	
 	$app->render(200,array('data' => $userr->toArray()));
 
 });
