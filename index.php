@@ -706,8 +706,34 @@ $app->get('/chat/:id', function ($id) use ($app) {
             'msg'   => 'user not found',
         ));
 	}
+
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+
+	$db = $app->db->getConnection();
+	$chats = $db->table('chats')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')
+								->where('iduserreceptor', $id)
+								->where('iduseremisor', $user->id)
+								->get();
+
 	$app->render(200,array('data' => $user->toArray()));
+	$app->render(200,array('data' => $chats->toArray()));
+
 });
+
 
 //Insertar Mensaje
 
