@@ -566,8 +566,6 @@ $app->post('/favoritos', function () use ($app) {
 
 // Traer favorito especifico para borrar
 
-// agregar favoritos
-
 $app->get('/misfavoritos', function () use ($app) {
   $token = $app->request->headers->get('auth-token');
 	if(empty($token)){
@@ -687,6 +685,15 @@ $app->get('/misfavoritoslist', function () use ($app) {
 
 // chat con el anunciante
 
+//Conexion con la tabla favoritos
+
+$app->get('/chats', function () use ($app) {
+	$db = $app->db->getConnection();
+	$chats = $db->table('chat')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')->get();
+
+	$app->render(200,array('data' => $chats));
+});
+
 //Buscar por ID
 
 $app->get('/chat/:id', function ($id) use ($app) {
@@ -699,6 +706,54 @@ $app->get('/chat/:id', function ($id) use ($app) {
         ));
 	}
 	$app->render(200,array('data' => $user->toArray()));
+});
+
+//Insertar Mensaje
+
+$app->post('/enviarchat', function () use ($app) {
+	
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+  $input = $app->request->getBody();
+  
+  $idreceptor = $input['idreceptor'];
+	if(empty($idreceptor)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id anuncio is required',
+        ));
+	}
+
+	$mensaje = $input['mensaje'];
+	if(empty($mensaje)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id anuncio is required',
+        ));
+	}
+	
+	
+	$chat = new Chat();
+    $chat->iduserreceptor = $idreceptor;
+    $chat->iduseremisor = $user->id;
+    $chat->mensaje = $mensaje;
+    $chat->save();
+    $app->render(200,array('data' => $chat->toArray()));
 });
 
 
