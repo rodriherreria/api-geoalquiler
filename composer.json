@@ -1,10 +1,7 @@
 {
     "require": {
-       "php": "^5.5.12",
-        "slim/slim": "2.6",
+        "slim/slim": "^2.6",
         "zeuxisoo/slim-eloquent": "0.1.0",
-        "entomb/slim-json-api": "dev-master",
-        "slim/middleware": "*"
+        "entomb/slim-json-api": "dev-master"
     }
 }
-
