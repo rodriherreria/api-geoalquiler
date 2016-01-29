@@ -739,5 +739,7 @@ $app->post('/enviarchat', function () use ($app) {
     $chat->save();
     $app->render(200,array('data' => $chat->toArray()));
 });
+
+ 
 $app->run();
 ?>
