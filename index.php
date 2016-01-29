@@ -258,7 +258,7 @@ $app->delete('/usuarios/:id', function ($id) use ($app) {
 $app->get('/anuncios', function () use ($app) {
 
 	$db = $app->db->getConnection();
-	$query = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor', 'created_at');
+	$query = $db->table('anuncios')->select('id', 'inmueble', 'titulo', 'precio', 'descripcion', 'foto', 'barrio', 'usersid', 'tipo', 'longitud', 'latitud', 'habitaciones', 'banios', 'suptotal', 'garage', 'balcon', 'living', 'comedor', 'created_at')
 
 	$pd_filter = $app->request()->params('pd');
 	if(!empty($pd_filter)){
