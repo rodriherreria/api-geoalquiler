@@ -1,49 +1,49 @@
-<?php
-
-require 'vendor/autoload.php';
-require 'Models/User.php';
-require 'Models/Anuncios.php';
-require 'Models/Barrios.php';
-require 'Models/Favoritos.php';
-require 'Models/Chats.php';
-
-function simple_encrypt($text,$salt){  
-   return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $salt, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
-}
+ <?php 
  
-function simple_decrypt($text,$salt){  
-    return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $salt, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
-}
-
-$app = new \Slim\Slim();
-
-$app->enc_key = '1234567891234567';
-
-$app->config('databases', [
-    'default' => [
-        'driver'    => 'mysql',
-        'host'      => 'us-cdbr-iron-east-03.cleardb.net',
-        'database'  => 'heroku_cdaa68b6cbc8edb',
-        'username'  => 'b5d870bc08264e',
-        'password'  => '121369b6',
-        'charset'   => 'utf8',
-        'collation' => 'utf8_general_ci',
-        'prefix'    => ''
-    ]
-]);
-$app->add(new Zeuxisoo\Laravel\Database\Eloquent\ModelMiddleware);
-
-$app->view(new \JsonApiView());
-$app->add(new \JsonApiMiddleware());
-$app->add(new \Slim\Middleware\ContentTypes());
-
-$app->options('/(:name+)', function() use ($app) {
-    $app->render(200,array('msg' => 'API Index'));
-});
-
-$app->get('/', function () use ($app) {
-$app->render(200,array('msg' =>'API INDEX'));
-});
+ require 'vendor/autoload.php';
+ require 'Models/User.php';
+ require 'Models/Anuncios.php';
+ require 'Models/Barrios.php';
+ require 'Models/Favoritos.php';
+ require 'Models/Chats.php';
+ 
+ function simple_encrypt($text,$salt){  
+    return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $salt, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+ }
+  
+ function simple_decrypt($text,$salt){  
+     return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $salt, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+ }
+ 
+ $app = new \Slim\Slim();
+ 
+ $app->enc_key = '1234567891234567';
+ 
+ $app->config('databases', [
+     'default' => [
+         'driver'    => 'mysql',
+         'host'      => 'us-cdbr-iron-east-03.cleardb.net',
+         'database'  => 'heroku_cdaa68b6cbc8edb',
+         'username'  => 'b5d870bc08264e',
+         'password'  => '121369b6',
+         'charset'   => 'utf8',
+         'collation' => 'utf8_general_ci',
+         'prefix'    => ''
+     ]
+ ]);
+ $app->add(new Zeuxisoo\Laravel\Database\Eloquent\ModelMiddleware);
+ 
+ $app->view(new \JsonApiView());
+ $app->add(new \JsonApiMiddleware());
+ $app->add(new \Slim\Middleware\ContentTypes());
+ 
+ $app->options('/(:name+)', function() use ($app) {
+     $app->render(200,array('msg' => 'API Index'));
+ });
+ 
+ $app->get('/', function () use ($app) {
+ $app->render(200,array('msg' =>'API INDEX'));
+ });
 
 //Mostrar
 
