@@ -271,11 +271,38 @@ $app->get('/anuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+//Conexion con la tabla barrio
+$app->get('/barrios', function () use ($app) {
+	$db = $app->db->getConnection();
+	$barrios = $db->table('barrios')->select('id', 'nombres')->get();
+	$app->render(200,array('data' => $barrios));
+});
+
 //Insertar Anuncio
-
 $app->post('/anuncios', function () use ($app) {
-
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
   $input = $app->request->getBody();
+  $inmueble = $input['inmueble'];
+	if(empty($inmueble)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'inmueble is required',
+        ));
+	}
 	$titulo = $input['titulo'];
 	if(empty($titulo)){
 		$app->render(500,array(
@@ -297,7 +324,27 @@ $app->post('/anuncios', function () use ($app) {
             'msg'   => 'precio is required',
         ));
 	}
-
+	$habitaciones = $input['habitaciones'];
+	if(empty($habitaciones)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'habitaciones is required',
+        ));
+	}
+	$banios = $input['banios'];
+	if(empty($banios)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'banios is required',
+        ));
+	}
+	$direccion = $input['direccion'];
+	if(empty($direccion)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'direccion is required',
+        ));
+	}
 	$barrio = $input['barrio'];
 	if(empty($barrio)){
 		$app->render(500,array(
@@ -305,22 +352,67 @@ $app->post('/anuncios', function () use ($app) {
             'msg'   => 'barrio is required',
         ));
 	}
-
+	$suptotal = $input['suptotal'];
+	if(empty($suptotal)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'suptotal is required',
+        ));
+	}
+	$longitud = $input['longitud'];
+	if(empty($longitud)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'longitud is required',
+        ));
+	}
+	$latitud = $input['latitud'];
+	if(empty($latitud)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'latitud is required',
+        ));
+	}
+	$tipo = $input['tipo'];
+	if(empty($tipo)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'tipo is required',
+        ));
+	}
+	$garage = $input['garage'];
+	
+	$balcon = $input['balcon'];
+	
+	$living = $input['living'];
+	
+	$comedor = $input['comedor'];
+	
     $anuncio = new Anuncio();
+    $anuncio->inmueble = $inmueble;
     $anuncio->titulo = $titulo;
     $anuncio->descripcion = $descripcion;
     $anuncio->precio = $precio;
+    $anuncio->habitaciones = $habitaciones;
+    $anuncio->banios = $banios;
+    $anuncio->direccion = $direccion;
     $anuncio->barrio = $barrio;
+    $anuncio->longitud = $longitud;
+    $anuncio->latitud = $latitud;
+    $anuncio->suptotal = $suptotal;
+    $anuncio->tipo = $tipo;
+    $anuncio->garage = $garage;
+    $anuncio->balcon = $balcon;
+    $anuncio->living = $living;
+    $anuncio->comedor = $comedor;
+	$anuncio->usersid = $user->id;
     $anuncio->save();
     $app->render(200,array('data' => $anuncio->toArray()));
 });
 
-
 //Editar Anuncio
-
 $app->put('/anuncios/:id', function ($id) use ($app) {
   $input = $app->request->getBody();
-
 	$titulo = $input['titulo'];
 	if(empty($titulo)){
 		$app->render(500,array(
@@ -357,7 +449,6 @@ $app->put('/anuncios/:id', function ($id) use ($app) {
 });
 
 //Buscar Anuncio
-
 $app->get('/anuncios/:id', function ($id) use ($app) {
 	$anuncio = Anuncio::find($id);
 	if(empty($anuncio)){
@@ -366,14 +457,12 @@ $app->get('/anuncios/:id', function ($id) use ($app) {
             'msg'   => 'Anuncio not found',
         ));
 	}
-
 	$anuncio->user = User::find($anuncio->usersid);
-	
+	$anuncio->barrio = Barrio::find($anuncio->barrio);
 	$app->render(200,array('data' => $anuncio->toArray()));
 });
 
 // Borrar Anuncio
-
 $app->delete('/anuncios/:id', function ($id) use ($app) {
 	$anuncio = Anuncio::find($id);
 	if(empty($anuncio)){
@@ -382,10 +471,10 @@ $app->delete('/anuncios/:id', function ($id) use ($app) {
             'msg'   => 'user not found',
         ));
 	}
-
 	$anuncio->delete();
 	$app->render(200);
 });
+
 // traer un anuncio//
 $app->get('/misanuncios', function () use ($app) {
 	
@@ -410,5 +499,241 @@ $app->get('/misanuncios', function () use ($app) {
 	$app->render(200,array('data' => $anuncios));
 });
 
+//Conexion con la tabla favoritos
+$app->get('/fav', function () use ($app) {
+	$db = $app->db->getConnection();
+	$fav = $db->table('favoritos')->select('id', 'idanuncios', 'idusers')->get();
+	$app->render(200,array('data' => $fav));
+});
+
+// agregar favoritos
+$app->post('/favoritos', function () use ($app) {
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+  $input = $app->request->getBody();
+  
+  $idanuncio = $input['idanuncios'];
+	if(empty($idanuncio)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id anuncio is required',
+        ));
+	}
+	
+	$favorito = new Favorito();
+    $favorito->idanuncios = $idanuncio;
+    $favorito->idusers = $user->id;
+    $favorito->save();
+    $app->render(200,array('data' => $favorito->toArray()));
+});
+
+// Traer favorito especifico para borrar
+$app->get('/misfavoritos', function () use ($app) {
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 12',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 15',
+        ));
+	}
+	
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	
+	$app->render(200,array('data' => $favoritos));
+});
+
+// ver favorito y borrar 
+$app->delete('/delfavoritos', function () use ($app) {
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 13',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged 15',
+        ));
+	}
+	
+	
+	$input = $app->request->getBody();
+  
+	  $idanuncio = $input['idanuncio'];
+		if(empty($idanuncio)){
+			$app->render(500,array(
+				'error' => TRUE,
+				'msg'   => 'Id anuncio is required',
+			));
+		}
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->where('idanuncios', $idanuncio)->get();
+	
+	$idfav = $favoritos->id;
+	
+	$favorito = Favorito::find($idfav);
+	if(empty($favorito)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'favorito not found 4',
+        ));
+	}
+	$favorito->delete();
+	$app->render(200);
+		
+});
+// listar mis favoritos
+$app->get('/misfavoritoslist', function () use ($app) {
+	
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+	
+	$db = $app->db->getConnection();
+	
+	$favoritos = $db->table('favoritos')->select('id', 'idusers', 'idanuncios')->where('idusers', $user->id)->get();
+	foreach ($favoritos as $key => $favoritos) {
+		$anuncios = $db->table('anuncios')->select('id', 'usersid', 'titulo', 'precio', 'descripcion', 'barrio')->where('id', $favoritos->idanuncios)->get();
+		
+		$favoritos[$key]->anuncios = $anuncios;
+	}
+		
+	$app->render(200,array('data' => $favoritos));
+});
+// chat con el anunciante
+//Conexion con la tabla favoritos
+$app->get('/chats', function () use ($app) {
+	$db = $app->db->getConnection();
+	$chats = $db->table('chats')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')->get();
+	$app->render(200,array('data' => $chats));
+});
+//Buscar por ID
+$app->get('/chat/:id', function ($idr) use ($app) {
+	
+	$userr = User::find($idr);
+	if(empty($userr)){
+		$app->render(404,array(
+			'error' => TRUE,
+            'msg'   => 'user not found',
+        ));
+	}
+	$token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$db = $app->db->getConnection();
+	$chats = $db->table('chats')->select('id', 'iduserreceptor', 'iduseremisor', 'mensaje')
+								->where('iduserreceptor', $idr)
+								->where('iduseremisor', $user->id)
+								->get();
+	$app->render(200,array('data' => $userr->toArray()));
+	$app->render(200,array('data' => $chats->toArray()));
+});
+//Insertar Mensaje
+$app->post('/enviarchat', function () use ($app) {
+  $token = $app->request->headers->get('auth-token');
+	if(empty($token)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	$id_user_token = simple_decrypt($token, $app->enc_key);
+	$user = User::find($id_user_token);
+	if(empty($user)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Not logged',
+        ));
+	}
+	
+  $input = $app->request->getBody();
+  
+  $iduserreceptor = $input['iduserreceptor'];
+	if(empty($iduserreceptor)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Id receptor is required',
+        ));
+	}
+	$mensaje = $input['mensaje'];
+	if(empty($mensaje)){
+		$app->render(500,array(
+			'error' => TRUE,
+            'msg'   => 'Mensaje es necesario',
+        ));
+	}
+	
+	$chat = new Chat();
+    $chat->iduserreceptor = $iduserreceptor;
+    $chat->mensaje = $mensaje;
+    $chat->iduseremisor = $user->id;
+    $chat->save();
+    $app->render(200,array('data' => $chat->toArray()));
+});
 $app->run();
 ?>
